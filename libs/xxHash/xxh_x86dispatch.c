@@ -59,7 +59,11 @@ extern "C" {
 /*! @cond Doxygen ignores this part */
 #ifndef XXH_HAS_INCLUDE
 #  ifdef __has_include
-#    define XXH_HAS_INCLUDE(x) __has_include(x)
+/*
+ * Not defined as XXH_HAS_INCLUDE(x) (function-like) because
+ * this causes segfaults in Apple Clang 4.2 (on Mac OS X 10.7 Lion)
+ */
+#    define XXH_HAS_INCLUDE __has_include
 #  else
 #    define XXH_HAS_INCLUDE(x) 0
 #  endif
@@ -725,8 +729,8 @@ static XXH_CONSTRUCTOR void XXH_setDispatch(void)
 /*! @cond Doxygen ignores this part */
 
 static XXH64_hash_t
-XXH3_hashLong_64b_defaultSecret_selection(const void* input, size_t len,
-                                          XXH64_hash_t seed64, const xxh_u8* secret, size_t secretLen)
+XXH3_hashLong_64b_defaultSecret_selection(const void* XXH_RESTRICT input, size_t len,
+                                          XXH64_hash_t seed64, const xxh_u8* XXH_RESTRICT secret, size_t secretLen)
 {
     (void)seed64; (void)secret; (void)secretLen;
     if (XXH_DISPATCH_MAYBE_NULL && XXH_g_dispatch.hashLong64_default == NULL)
@@ -740,8 +744,8 @@ XXH64_hash_t XXH3_64bits_dispatch(XXH_NOESCAPE const void* input, size_t len)
 }
 
 static XXH64_hash_t
-XXH3_hashLong_64b_withSeed_selection(const void* input, size_t len,
-                                     XXH64_hash_t seed64, const xxh_u8* secret, size_t secretLen)
+XXH3_hashLong_64b_withSeed_selection(const void* XXH_RESTRICT input, size_t len,
+                                     XXH64_hash_t seed64, const xxh_u8* XXH_RESTRICT secret, size_t secretLen)
 {
     (void)secret; (void)secretLen;
     if (XXH_DISPATCH_MAYBE_NULL && XXH_g_dispatch.hashLong64_seed == NULL)
@@ -755,8 +759,8 @@ XXH64_hash_t XXH3_64bits_withSeed_dispatch(XXH_NOESCAPE const void* input, size_
 }
 
 static XXH64_hash_t
-XXH3_hashLong_64b_withSecret_selection(const void* input, size_t len,
-                                       XXH64_hash_t seed64, const xxh_u8* secret, size_t secretLen)
+XXH3_hashLong_64b_withSecret_selection(const void* XXH_RESTRICT input, size_t len,
+                                       XXH64_hash_t seed64, const xxh_u8* XXH_RESTRICT secret, size_t secretLen)
 {
     (void)seed64;
     if (XXH_DISPATCH_MAYBE_NULL && XXH_g_dispatch.hashLong64_secret == NULL)
